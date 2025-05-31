@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BookOpen, Clock, ArrowLeft, CheckCircle, AlertTriangle } from 'lucide-react';
-import { useQuestions, QuizGenerationRequest } from '../hooks/useApi';
+import { useQuestions, QuizGenerationRequest, Question } from '../hooks/useApi';
+import { QuizInterface } from '../components/QuizInterface';
+import { QuizResults } from '../components/QuizResults';
 
 interface QuizConfig {
   selectedTopics: string[];
@@ -10,20 +12,55 @@ interface QuizConfig {
   distributionStrategy: 'even' | 'proportional';
 }
 
+interface QuizAnswer {
+  questionId: number;
+  selectedAnswer: string;
+  isCorrect: boolean;
+  timeSpent: number;
+}
+
+interface QuizResultsData {
+  answers: QuizAnswer[];
+  score: number;
+  totalQuestions: number;
+  timeSpent: number;
+  topicBreakdown: Record<string, { correct: number; total: number }>;
+}
+
 export const Quiz: React.FC = () => {
   const navigate = useNavigate();
   const { generateQuiz, loading, error } = useQuestions();
   
   const [quizConfig, setQuizConfig] = useState<QuizConfig | null>(null);
+  const [quizQuestions, setQuizQuestions] = useState<Question[]>([]);
   const [quizGenerated, setQuizGenerated] = useState(false);
+  const [quizStarted, setQuizStarted] = useState(false);
+  const [quizResults, setQuizResults] = useState<QuizResultsData | null>(null);
   const [generationError, setGenerationError] = useState<string | null>(null);
 
   useEffect(() => {
     // Get quiz configuration from localStorage
     const savedConfig = localStorage.getItem('quizConfig');
     const savedTopics = localStorage.getItem('selectedTopics');
+    const savedQuiz = localStorage.getItem('currentQuiz');
     
-    if (savedConfig && savedTopics) {
+    if (savedQuiz) {
+      // Quiz already generated, load it
+      try {
+        const quizData = JSON.parse(savedQuiz);
+        setQuizQuestions(quizData.questions || []);
+        setQuizGenerated(true);
+        
+        // Also load config for mode information
+        if (savedConfig) {
+          const config = JSON.parse(savedConfig) as QuizConfig;
+          setQuizConfig(config);
+        }
+      } catch (err) {
+        console.error('Error loading saved quiz:', err);
+        setGenerationError('Failed to load saved quiz');
+      }
+    } else if (savedConfig && savedTopics) {
       try {
         const config = JSON.parse(savedConfig) as QuizConfig;
         const topics = JSON.parse(savedTopics) as string[];
@@ -59,6 +96,7 @@ export const Quiz: React.FC = () => {
       
       // Store generated quiz data
       localStorage.setItem('currentQuiz', JSON.stringify(quizData));
+      setQuizQuestions(quizData.questions || []);
       setQuizGenerated(true);
       
     } catch (err) {
@@ -71,9 +109,39 @@ export const Quiz: React.FC = () => {
   };
 
   const handleStartQuiz = () => {
-    // TODO: Navigate to actual quiz interface when implemented
-    alert('Quiz interface coming soon! This will show the first question with proper formatting.');
+    setQuizStarted(true);
   };
+
+  const handleQuizComplete = (results: QuizResultsData) => {
+    setQuizResults(results);
+    // Clear the current quiz from localStorage since it's completed
+    localStorage.removeItem('currentQuiz');
+  };
+
+  // Show quiz results if completed
+  if (quizResults && quizConfig) {
+    return (
+      <QuizResults
+        answers={quizResults.answers}
+        score={quizResults.score}
+        totalQuestions={quizResults.totalQuestions}
+        timeSpent={quizResults.timeSpent}
+        topicBreakdown={quizResults.topicBreakdown}
+        mode={quizConfig.mode}
+      />
+    );
+  }
+
+  // Show quiz interface if started
+  if (quizStarted && quizQuestions.length > 0 && quizConfig) {
+    return (
+      <QuizInterface
+        questions={quizQuestions}
+        mode={quizConfig.mode}
+        onQuizComplete={handleQuizComplete}
+      />
+    );
+  }
 
   if (loading) {
     return (
@@ -121,7 +189,7 @@ export const Quiz: React.FC = () => {
     );
   }
 
-  if (quizGenerated && quizConfig) {
+  if (quizGenerated && quizConfig && quizQuestions.length > 0) {
     return (
       <div className="max-w-4xl mx-auto">
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
@@ -133,7 +201,7 @@ export const Quiz: React.FC = () => {
               <h2 className="text-lg font-semibold text-gray-900 mb-4">Quiz Summary</h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
                 <div>
-                  <div className="text-2xl font-bold text-blue-600">{quizConfig.questionCount}</div>
+                  <div className="text-2xl font-bold text-blue-600">{quizQuestions.length}</div>
                   <div className="text-sm text-gray-600">Questions</div>
                 </div>
                 <div>
@@ -155,7 +223,7 @@ export const Quiz: React.FC = () => {
               <div className="flex items-center justify-center space-x-2 text-gray-600">
                 <Clock className="w-5 h-5" />
                 <span>
-                  Estimated time: {Math.ceil(quizConfig.questionCount * 1.5)} minutes
+                  Estimated time: {Math.ceil(quizQuestions.length * 1.5)} minutes
                 </span>
               </div>
               
