@@ -1,0 +1,162 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  }
+  
+  body {
+    @apply bg-gray-50 text-gray-900;
+  }
+}
+
+@layer components {
+  /* Question formatting styles */
+  .question-text {
+    @apply font-serif leading-relaxed;
+    white-space: pre-wrap;
+  }
+  
+  .given-info {
+    @apply font-mono bg-blue-50 border-l-4 border-blue-400 p-4 my-4 rounded-r-lg;
+  }
+  
+  .given-info-table {
+    @apply grid gap-x-6 gap-y-2;
+    grid-template-columns: auto 1fr;
+  }
+  
+  .answer-choices {
+    @apply space-y-3 mt-6;
+  }
+  
+  .choice-option {
+    @apply block w-full p-4 text-left border-2 border-gray-200 rounded-lg transition-all duration-200 hover:border-blue-300 hover:shadow-md cursor-pointer;
+  }
+  
+  .choice-option:hover {
+    @apply bg-blue-50;
+  }
+  
+  .choice-option.selected {
+    @apply border-blue-500 bg-blue-100;
+  }
+  
+  .choice-option.correct {
+    @apply border-green-500 bg-green-100;
+  }
+  
+  .choice-option.incorrect {
+    @apply border-red-500 bg-red-100;
+  }
+  
+  .choice-option.disabled {
+    @apply cursor-not-allowed opacity-60;
+  }
+  
+  /* Special character formatting */
+  .superscript {
+    @apply text-xs;
+    vertical-align: super;
+  }
+  
+  .subscript {
+    @apply text-xs;
+    vertical-align: sub;
+  }
+  
+  /* Question images */
+  .question-image {
+    @apply max-w-full h-auto my-4 border border-gray-300 rounded-lg shadow-sm;
+  }
+  
+  /* Topic selection */
+  .topic-checkbox {
+    @apply flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors;
+  }
+  
+  .topic-checkbox.selected {
+    @apply bg-blue-50 border-blue-300;
+  }
+  
+  /* Quiz progress */
+  .progress-bar {
+    @apply w-full bg-gray-200 rounded-full h-2.5;
+  }
+  
+  .progress-fill {
+    @apply bg-blue-600 h-2.5 rounded-full transition-all duration-300 ease-out;
+  }
+  
+  /* Feedback animations */
+  .feedback-correct {
+    @apply animate-bounce-subtle;
+  }
+  
+  .feedback-incorrect {
+    animation: shake 0.5s ease-in-out;
+  }
+  
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+  }
+  
+  /* Custom scrollbar */
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 #f1f5f9;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-gray-100;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-gray-400 rounded-full;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-500;
+  }
+}
+
+@layer utilities {
+  /* Text formatting utilities */
+  .text-with-formatting {
+    @apply whitespace-pre-wrap;
+  }
+  
+  /* Layout utilities */
+  .container-quiz {
+    @apply max-w-4xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  /* Button variants */
+  .btn-primary {
+    @apply bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200;
+  }
+  
+  .btn-secondary {
+    @apply bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition-colors duration-200;
+  }
+  
+  .btn-success {
+    @apply bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200;
+  }
+  
+  .btn-danger {
+    @apply bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200;
+  }
+  
+  .btn-outline {
+    @apply border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200;
+  }
+}
