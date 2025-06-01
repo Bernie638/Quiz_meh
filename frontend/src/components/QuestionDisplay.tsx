@@ -193,7 +193,7 @@ export const QuestionDisplay: React.FC<QuestionDisplayProps> = ({
           </div>
         )}
         
-        {question.answerChoices.choices.map((choice, index) => {
+        {question.answerChoices.choices.map((choice) => {
           const status = getChoiceStatus(choice.letter);
           
           return (

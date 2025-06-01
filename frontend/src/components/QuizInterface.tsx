@@ -7,7 +7,7 @@ import {
   ChevronRight, 
   Check, 
   X, 
-  RotateCcw, 
+ 
   Trophy,
   Clock,
   ArrowLeft,
@@ -279,10 +279,10 @@ export const QuizInterface: React.FC<QuizInterfaceProps> = ({
           <div className="flex items-center space-x-3">
             {mode === 'practice' && (
               <button
-                onClick={handleSubmitAnswer}
-                disabled={!currentAnswer || answeredCurrentQuestion}
+                onClick={() => handleSubmitAnswer()}
+                disabled={!currentAnswer || !!answeredCurrentQuestion}
                 className={`btn-secondary ${
-                  !currentAnswer || answeredCurrentQuestion ? 'opacity-50 cursor-not-allowed' : ''
+                  !currentAnswer || !!answeredCurrentQuestion ? 'opacity-50 cursor-not-allowed' : ''
                 }`}
               >
                 {answeredCurrentQuestion ? 'Answered' : 'Submit Answer'}

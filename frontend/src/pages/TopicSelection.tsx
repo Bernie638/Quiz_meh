@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CheckCircle2, Circle, Users, BookOpen, AlertCircle, Loader2 } from 'lucide-react';
-import { useTopics, Topic } from '../hooks/useApi';
+import { useTopics } from '../hooks/useApi';
 
 export const TopicSelection: React.FC = () => {
   const navigate = useNavigate();

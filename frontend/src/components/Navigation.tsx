@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { BookOpen, Settings, BarChart3, Clock } from 'lucide-react';
+import { BookOpen, Settings, Clock } from 'lucide-react';
 
 export const Navigation: React.FC = () => {
   const location = useLocation();

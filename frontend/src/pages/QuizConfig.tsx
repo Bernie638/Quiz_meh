@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Settings, Users, Clock, Target, BookOpen, AlertCircle, CheckCircle, Loader2 } from 'lucide-react';
-import { useTopics, Topic } from '../hooks/useApi';
+import { useTopics } from '../hooks/useApi';
 
 interface QuizConfig {
   selectedTopics: string[];
@@ -18,7 +18,6 @@ interface TopicSummary {
 
 export const QuizConfig: React.FC = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const { topics, loading: topicsLoading, error: topicsError, fetchTopics } = useTopics();
   
   const [config, setConfig] = useState<QuizConfig>({

@@ -193,7 +193,7 @@ export function useQuestions() {
         total: number;
       }>>('/questions', { params });
       
-      if (response.data.success) {
+      if (response.data.success && response.data.data) {
         setData(response.data.data);
       } else {
         setError(response.data.error || 'Failed to fetch questions');
